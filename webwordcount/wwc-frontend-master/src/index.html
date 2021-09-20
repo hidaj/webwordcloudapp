@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WebWordCount</title>
+
+
+<link rel="stylesheet" href="styles/ui.css" >
+
+
+<script type="text/javascript">
+
+let result = 0;
+let paragraph = '';
+let word = '';
+
+let wcountURL = "http://wordcount.40313770.qpc.hal.davecutting.uk/";
+let kwcheckURL = "http://keywordsearch.40313770.qpc.hal.davecutting.uk/";
+let kwcountURL = "http://keywordcount.40313770.qpc.hal.davecutting.uk/";
+
+  function Display1()
+    {
+          document.getElementById('display-1').value = result;
+    }
+
+
+  function Display2()
+    {
+        if (result == 1)
+            result = 'Keyword exists!';
+        else if (result == 0)
+            result = ''+document.getElementById('word').value+' : does not exist!';
+        document.getElementById('display-2').value = result;
+    }
+
+
+  function Display3()
+    {
+        document.getElementById('display-3').value = result;
+    }
+
+
+  function Clear()
+    {
+        document.getElementById('paragraph').value = '';
+        document.getElementById('word').value = '';
+        document.getElementById('display-1').value = '';
+        document.getElementById('display-2').value = '';
+        document.getElementById('display-3').value = '';
+    }
+
+
+    function WordCount()
+      {
+          paragraph = document.getElementById('paragraph').value.trim().replace(/[^a-zA-Z0-9 ]/,'').toLowerCase()
+          word = document.getElementById('word').value.trim().replace(/[^a-zA-Z0-9 ]/,'').toLowerCase()
+          
+            if (paragraph == '' || paragraph == ' '){
+              alert("Please enter a paragraph");
+              return false;
+            }
+            else
+            {
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var j = JSON.parse(this.response);
+                        result = j.answer;
+                        Display1();
+                        }
+                      };
+
+                xhttp.open("GET",wcountURL+"?paragraph="+paragraph+"&word="+word);
+                xhttp.send();
+                return;
+            }
+      }
+
+
+  function Check()
+    {
+        paragraph = document.getElementById('paragraph').value.trim().replace(/[^a-zA-Z0-9 ]/,'').toLowerCase()
+        word = document.getElementById('word').value.trim().replace(/[^a-zA-Z0-9 ]/,'').toLowerCase()
+
+              if (paragraph == '' && word == ''){
+                alert("Please enter a paragraph and keyword");
+                return false;
+          }
+              if (paragraph == ''){
+                alert("Please enter a paragraph");
+                return false;
+          }
+
+              if (word == ''){
+                alert("Please enter a keyword");
+                return false;
+          }
+
+              if (word.includes(' ')){
+                alert("Please enter a single keyword");
+                return false;
+          }
+              else
+              {
+                  let xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                          var j = JSON.parse(this.response);
+                          result = j.answer;
+                          Display2();
+                      }
+                      
+                  };
+
+                    xhttp.open("GET",kwcheckURL+"?paragraph="+paragraph+"&word="+word);
+                    xhttp.send();
+                  return;
+      }
+    }
+
+
+  function KeywordAppearance()
+  {
+      paragraph = document.getElementById('paragraph').value.trim().replace(/[^a-zA-Z0-9 ]/,'').toLowerCase()
+      word = document.getElementById('word').value.trim().replace(/[^a-zA-Z0-9 ]/,'').toLowerCase()
+
+      if (paragraph == '' && word == ''){
+        alert("Please enter a paragraph and keyword");
+
+        return false;
+  }
+      if (paragraph == ''){
+        alert("Please enter a paragraph");
+
+        return false;
+  }
+      if (word.includes(' ')){
+              alert("Please enter a single keyword");
+
+              return false;
+  }
+      else
+      {
+          let xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  var j = JSON.parse(this.response);
+                  result = j.answer;
+                  Display3();
+              }
+          };
+
+          xhttp.open("GET",kwcountURL+"?paragraph="+paragraph+"&word="+word);
+          xhttp.send();
+
+          return;
+      }
+}
+
+
+</script>
+
+
+</head>
+
+
+<body>
+
+
+<div id="wordcount">
+
+    <div id="logo">
+        Web Word Count App
+    </div>
+
+
+    <div>
+        <textarea id="paragraph" rows="5" cols="35" placeholder="Enter the paragraph here..." value=""></textarea>
+    </div>
+
+    <div>
+        <input type="text" id="word" placeholder="Enter the keyword here..." value="">
+    </div>
+
+    <div>
+        <input type="text" class="display" id="display-1" readonly=1 placeholder="Total word count = 0 " value=""><br>
+        <input type="text" class="display" id="display-2" readonly=1 placeholder="Keyword does not exist!" value=""><br>
+        <input type="text" class="display" id="display-3" readonly=1 placeholder="Total keyword appearances = 0" value="">
+    </div>
+
+    <div>
+        <button class="wwcbutton" onclick="WordCount();">Total words?</button>
+    </div>
+
+    <div>
+        <button class="wwcbutton" onclick="Check();">Check keyword appearance</button>
+    </div>
+
+    <div>
+        <button class="wwcbutton" onclick="KeywordAppearance();">Total keyword appearances?</button>
+    </div>
+
+    <div>
+        <button class="wwcbutton-clear" onclick="Clear();">Clear</button>
+    </div>
+
+</div>
+
+</body>
+
+
+</html>
