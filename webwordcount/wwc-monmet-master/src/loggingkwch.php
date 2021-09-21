@@ -30,7 +30,7 @@ require('/var/www/html/monkwch.php');
             $msg= wordwrap($msg,70);
                     
                     
-            mail("01brojack@gmail.com", "Service Unavailable",$msg,$headers);
+            mail("email", "Service Unavailable",$msg,$headers);
                 }
 
     #echo 'Adding to csv file ';
